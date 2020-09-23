@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">InstagramSelectImage</string>
+    <string name="camera_roll">Camera Roll</string>
+    <string name="photo">Photo</string>
+    <string name="picture_empty">Picture empty</string>
+    <string name="cancel">Cancel</string>
+    <string name="albums">Albums</string>
+    <string name="next">Next</string>
+    <string name="photo_selection_limit_reached">Limit selection</string>
+    <string name="let_select_picture">Let\'s Select Picture</string>
+    <string name="gallery">Gallery</string>
+</resources>
