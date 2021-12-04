@@ -30,83 +30,23 @@
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <!-- Crop after capture -->
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="H,1:1"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.yashoid.instacropper.InstaCropperView
-                android:id="@+id/cropperViewAfterCapture"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone" />
-
-        </FrameLayout>
-
-        <!--<FrameLayout
-            android:id="@+id/layoutCrop"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            app:layout_constraintTop_toTopOf="parent" />-->
-
-        <FrameLayout
-            android:id="@+id/layoutCrop"
+        <ImageView
+            android:id="@+id/imageViewReview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="H,1:1"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <LinearLayout
-            android:id="@+id/layoutAction"
-            android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <TextView
-                android:id="@+id/buttonGallery"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/camera_roll"
-                android:textColor="@color/text_blue"
-                android:textSize="@dimen/text_16sp" />
-
-            <TextView
-                android:id="@+id/buttonPhoto"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/photo"
-                android:textColor="@color/text_gray"
-                android:textSize="@dimen/text_16sp" />
-
-        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewPhoto"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:numColumns="2"
-            app:layout_constraintBottom_toTopOf="@id/layoutAction"
-            app:layout_constraintTop_toBottomOf="@id/layoutCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageViewReview"
             tools:layoutManager="GridLayoutManager"
             tools:listitem="@layout/item_instagram_photo"
             tools:spanCount="5" />
-
-        <ImageView
-            android:id="@+id/buttonScale"
-            android:layout_width="@dimen/space_40dp"
-            android:layout_height="@dimen/space_40dp"
-            android:layout_margin="@dimen/space_16dp"
-            android:src="@drawable/selector_instagram_scale"
-            app:layout_constraintBottom_toBottomOf="@id/layoutCrop"
-            app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
             android:id="@+id/buttonSelectMultiple"
@@ -114,8 +54,28 @@
             android:layout_height="@dimen/space_40dp"
             android:layout_margin="@dimen/space_16dp"
             android:src="@drawable/selector_instagram_multiple_selection"
-            app:layout_constraintBottom_toBottomOf="@id/layoutCrop"
-            app:layout_constraintEnd_toEndOf="@id/layoutCrop" />
+            app:layout_constraintBottom_toBottomOf="@id/imageViewReview"
+            app:layout_constraintEnd_toEndOf="@id/imageViewReview" />
+
+        <ImageView
+            android:id="@+id/buttonCapture"
+            android:layout_width="@dimen/space_40dp"
+            android:layout_height="@dimen/space_40dp"
+            android:layout_margin="@dimen/space_16dp"
+            android:src="@drawable/ic_baseline_photo_camera_24"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewReview"
+            app:layout_constraintEnd_toStartOf="@id/buttonSelectMultiple" />
+
+        <TextView
+            android:id="@+id/layoutEmpty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/picture_empty"
+            android:textSize="24sp"
+            android:layout_margin="@dimen/space_16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -144,14 +104,5 @@
             tools:listitem="@layout/item_instagram_photo" />
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/layoutEmpty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/picture_empty"
-        app:layout_anchor="@+id/layoutContent"
-        app:layout_anchorGravity="center" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

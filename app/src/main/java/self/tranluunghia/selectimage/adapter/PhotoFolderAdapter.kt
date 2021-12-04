@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_instagram_photo_folder.view.*
 import self.tranluunghia.selectimage.R
 import self.tranluunghia.selectimage.extensions.loadFile
+import self.tranluunghia.selectimage.extensions.loadUri
 import self.tranluunghia.selectimage.model.PhotoFolder
 import java.util.*
 
@@ -52,10 +53,7 @@ class PhotoFolderAdapter(
             itemView.textViewSize?.text = photoFolder.imageURIs.size.toString() + ""
             itemView.imageViewIcon?.let {
                 if (photoFolder.imageURIs.size > 0) {
-                    Glide.with(it.context).load(photoFolder.imageURIs[0])
-                        //.diskCacheStrategy(DiskCacheStrategy.NONE)
-                        //.skipMemoryCache(true)
-                        .into(it)
+                    it.loadUri(photoFolder.imageURIs[0])
                 }
             }
         }

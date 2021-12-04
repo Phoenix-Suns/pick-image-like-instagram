@@ -12,6 +12,7 @@ import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.item_instagram_photo.view.*
 import self.tranluunghia.selectimage.R
 import self.tranluunghia.selectimage.extensions.decodeBitmapFromFile
+import self.tranluunghia.selectimage.extensions.loadUri
 import java.util.*
 
 
@@ -91,14 +92,7 @@ class PhotoAdapter(@LayoutRes val itemLayoutId: Int = R.layout.item_instagram_ph
                             .fitCenter()
                         )
                         .into(imageView)*/
-                    Glide.with(imageView.context).load(item)
-                        .apply(
-                            RequestOptions()
-                                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                                .override(imageView.measuredWidth, imageView.measuredHeight)
-                                .fitCenter()
-                        )
-                        .into(imageView)
+                    imageView.loadUri(item)
                 }
             }
 
