@@ -45,6 +45,12 @@
 
         </FrameLayout>
 
+        <!--<FrameLayout
+            android:id="@+id/layoutCrop"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:layout_constraintTop_toTopOf="parent" />-->
+
         <FrameLayout
             android:id="@+id/layoutCrop"
             android:layout_width="match_parent"

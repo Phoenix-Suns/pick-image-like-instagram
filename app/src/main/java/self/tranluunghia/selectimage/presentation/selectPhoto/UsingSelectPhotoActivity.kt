@@ -1,37 +1,34 @@
-package self.tranluunghia.instagramselectimage
+package self.tranluunghia.selectimage.presentation.selectPhoto
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.ImageView
-import kotlinx.android.synthetic.main.activity_main.*
-import self.tranluunghia.instagramselectimage.extensions.loadFile
+import kotlinx.android.synthetic.main.activity_using_select_photo.*
+import self.tranluunghia.selectimage.R
+import self.tranluunghia.selectimage.extensions.loadFile
+import self.tranluunghia.selectimage.extensions.removeAllFragments
 
-
-class MainActivity : AppCompatActivity() {
-
-    private var maxSelectNum: Int? = 5
-    private var cropRatio: CropRatio? = CropRatio.RATIO_1X1
-
+class UsingSelectPhotoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_using_select_photo)
 
-        buttonSelectImage.setOnClickListener {
-            showSelectImage()
-        }
+        buttonBack.setOnClickListener { finish() }
+
+        showSelectImage()
     }
 
     private fun showSelectImage() {
-        val instagramFragment = InstagramSelectImageFragment.newInstance(10, null)
-        instagramFragment.listener = object : InstagramSelectImageFragment.Listener {
+        val instagramFragment = SelectImageFragment.newInstance(5, null)
+        instagramFragment.listener = object : SelectImageFragment.Listener {
 
             override fun onCropFinished(croppedPhotoPaths: ArrayList<String>, cropRatio: CropRatio) {
                 supportFragmentManager.beginTransaction().remove(instagramFragment).commit()
                 showImageInContainer(croppedPhotoPaths)
             }
         }
-        supportFragmentManager.beginTransaction().add(R.id.container, instagramFragment).commit()
+        supportFragmentManager.removeAllFragments().beginTransaction().add(R.id.layoutSelectImageContainer, instagramFragment).commit()
     }
 
     private fun showImageInContainer(photoPaths: ArrayList<String>) {

@@ -1,4 +1,4 @@
-package self.tranluunghia.instagramselectimage
+package self.tranluunghia.selectimage.presentation.selectPhoto
 
 
 import android.Manifest
@@ -29,14 +29,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.yashoid.instacropper.InstaCropperView
-import kotlinx.android.synthetic.main.fragment_instagram_select_photo.*
+import kotlinx.android.synthetic.main.fragment_select_photo.*
 import kotlinx.android.synthetic.main.toolbar_instagram_select_folder.*
 import kotlinx.android.synthetic.main.toolbar_instagram_select_image.*
 import kotlinx.android.synthetic.main.toolbar_instagram_select_image.buttonFolder
-import self.tranluunghia.instagramselectimage.adapter.PhotoAdapter
-import self.tranluunghia.instagramselectimage.adapter.PhotoFolder
-import self.tranluunghia.instagramselectimage.adapter.PhotoFolderAdapter
-import self.tranluunghia.instagramselectimage.utils.MediaUtils
+import self.tranluunghia.selectimage.R
+import self.tranluunghia.selectimage.adapter.PhotoAdapter
+import self.tranluunghia.selectimage.model.PhotoFolder
+import self.tranluunghia.selectimage.adapter.PhotoFolderAdapter
+import self.tranluunghia.selectimage.utils.MediaUtils
+import self.tranluunghia.selectimage.utils.MediaUtils.toBitmap
 import java.io.*
 
 private const val ARG_MAX_SELECT_NUM = "arg_max_select_num"
@@ -45,7 +47,7 @@ private const val REQUEST_PERMISSIONS = 1000
 private const val REQUEST_OPEN_CAMERA = 1001
 
 
-class InstagramSelectImageFragment : Fragment() {
+class SelectImageFragment : Fragment() {
 
     private val TAG = this::class.java.name
     private var maxSelectNum: Int = 0 //0: No max select
@@ -59,7 +61,7 @@ class InstagramSelectImageFragment : Fragment() {
     private var photoFolders: ArrayList<PhotoFolder> = ArrayList()
 
     private var photoAdapter: PhotoAdapter? = null
-    private var photos: ArrayList<String> = ArrayList()
+    private var photos: ArrayList<Uri> = ArrayList()
 
     private var cropPhotoViews: SparseArray<InstaCropperView> = SparseArray()
     private var remainCropPhotoCounter = 0
@@ -133,7 +135,7 @@ class InstagramSelectImageFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.fragment_instagram_select_photo, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_select_photo, container, false)
         return rootView
     }
 
@@ -184,11 +186,11 @@ class InstagramSelectImageFragment : Fragment() {
 
         photoAdapter?.listener = object : PhotoAdapter.Listener {
 
-            override fun onItemClick(view: View, position: Int, item: String) {
+            override fun onItemClick(view: View, position: Int, item: Uri) {
                 showCropView(position, item)
             }
 
-            override fun onItemChecked(view: View, isChecked: Boolean, position: Int, item: String) {
+            override fun onItemChecked(view: View, isChecked: Boolean, position: Int, item: Uri) {
                 val tag = getFragmentTag(position)
                 val cropView = findCropView(tag)
 
@@ -260,10 +262,13 @@ class InstagramSelectImageFragment : Fragment() {
 
 
     //#region Crop Item
-    private fun addCropView(photoPath: String, cropRatio: CropRatio, tag: Int): InstaCropperView {
+    private fun addCropView(photoPath: Uri, cropRatio: CropRatio, tag: Int): InstaCropperView {
         val cropperView = InstaCropperView(context)
         cropperView.id = tag
-        cropperView.layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT).also {
+        cropperView.layoutParams = FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        ).also {
             it.gravity = Gravity.CENTER
         }
         cropperView.tag = tag
@@ -277,6 +282,15 @@ class InstagramSelectImageFragment : Fragment() {
 
     private fun configCropperView(cropperView: InstaCropperView, photoPath: String, cropRatio: CropRatio) {
         cropperView.setImageUri(Uri.fromFile(File(photoPath)))
+        scaleCropperView(cropperView, cropRatio)
+    }
+
+    private fun configCropperView(
+        cropperView: InstaCropperView,
+        photoUri: Uri,
+        cropRatio: CropRatio
+    ) {
+        cropperView.setImageUri(photoUri)
         scaleCropperView(cropperView, cropRatio)
     }
 
@@ -451,8 +465,8 @@ class InstagramSelectImageFragment : Fragment() {
         //removeAllFragments(childFragmentManager)
         removeAllCropView()
 
-        photos = items.imagePaths
-        photoAdapter?.setItems(photos)
+        photos = items.imageURIs
+        photoAdapter?.setData(photos)
 
         // Select First photo
         if (photoAdapter != null) {
@@ -539,7 +553,7 @@ class InstagramSelectImageFragment : Fragment() {
         }
     }
 
-    private fun showCropView(position: Int, item: String) {
+    private fun showCropView(position: Int, item: Uri) {
         val tag = getFragmentTag(position)
         if (isSelectMultiple) {
             // --- Multiple selection ---
@@ -578,6 +592,14 @@ class InstagramSelectImageFragment : Fragment() {
         return if (bitmap.width > bitmap.height) CropRatio.RATIO_5X4 else CropRatio.RATIO_4X5
     }
 
+    private fun getCropRatio(imagePath: Uri): CropRatio {
+        // Fixme some image wrong width height
+        //val bitmap = BitmapFactory.decodeFile(imagePath)
+        val bitmap = imagePath.toBitmap(requireContext())
+        return if (bitmap != null && bitmap.width > bitmap.height) CropRatio.RATIO_5X4 else CropRatio.RATIO_4X5
+    }
+
+
     private fun allowPermissions(activity: Activity): Boolean {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
@@ -602,7 +624,7 @@ class InstagramSelectImageFragment : Fragment() {
             // Make all photos
             val photoFolderAll = PhotoFolder()
             photoFolderAll.folderName = getString(R.string.gallery)
-            photoFolders.forEach { folder -> photoFolderAll.imagePaths.addAll(folder.imagePaths) }
+            photoFolders.forEach { folder -> photoFolderAll.imageURIs.addAll(folder.imageURIs) }
             photoFolders.add(0, photoFolderAll)
 
             photoFolderAdapter?.updateItems(photoFolders)
@@ -630,7 +652,7 @@ class InstagramSelectImageFragment : Fragment() {
 
         @JvmStatic
         fun newInstance(maxSelectNum: Int?, cropRatio: CropRatio?) =
-                InstagramSelectImageFragment().apply {
+                SelectImageFragment().apply {
                     arguments = Bundle().apply {
                         maxSelectNum?.let { putInt(ARG_MAX_SELECT_NUM, it) }
                         cropRatio?.let { putSerializable(ARG_CROP_RATIO, it) }

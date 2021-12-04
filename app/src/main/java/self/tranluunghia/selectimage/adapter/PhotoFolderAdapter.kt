@@ -1,24 +1,25 @@
-package self.tranluunghia.instagramselectimage.adapter
+package self.tranluunghia.selectimage.adapter
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_instagram_photo_folder.view.*
-import self.tranluunghia.instagramselectimage.R
-import self.tranluunghia.instagramselectimage.extensions.loadFile
-import java.io.File
+import self.tranluunghia.selectimage.R
+import self.tranluunghia.selectimage.extensions.loadFile
+import self.tranluunghia.selectimage.model.PhotoFolder
 import java.util.*
 
 
-class PhotoFolderAdapter(@LayoutRes val itemLayoutId: Int = R.layout.item_instagram_photo_folder) : RecyclerView.Adapter<PhotoFolderAdapter.RecyclerViewHolder>() {
+class PhotoFolderAdapter(
+    @LayoutRes val itemLayoutId: Int = R.layout.item_instagram_photo_folder
+) : RecyclerView.Adapter<PhotoFolderAdapter.RecyclerViewHolder>() {
 
-    var items: List<PhotoFolder> = ArrayList()
+    var items: ArrayList<PhotoFolder> = ArrayList()
     var listener: Listener? = null
-    
+
     override fun onCreateViewHolder(viewGroup: ViewGroup, position: Int): RecyclerViewHolder {
         val inflater = LayoutInflater.from(viewGroup.context)
         val itemView: View = inflater.inflate(itemLayoutId, viewGroup, false)
@@ -35,21 +36,26 @@ class PhotoFolderAdapter(@LayoutRes val itemLayoutId: Int = R.layout.item_instag
     }
 
     fun updateItems(photoFolders: ArrayList<PhotoFolder>) {
-        this.items = photoFolders
+        this.items.clear()
+        this.items.addAll(photoFolders)
         notifyDataSetChanged()
     }
 
-    inner class RecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var itemPosition : Int = 0
+    inner class RecyclerViewHolder(itemView: View) :
+        RecyclerView.ViewHolder(itemView) {
+        var itemPosition: Int = 0
 
         fun bind(photoFolder: PhotoFolder, position: Int) {
             this.itemPosition = position
 
             itemView.buttonFolder?.text = photoFolder.folderName
-            itemView.textViewSize?.text = photoFolder.imagePaths.size.toString() + ""
+            itemView.textViewSize?.text = photoFolder.imageURIs.size.toString() + ""
             itemView.imageViewIcon?.let {
-                if (photoFolder.imagePaths.size > 0) {
-                    it.loadFile(photoFolder.imagePaths[0])
+                if (photoFolder.imageURIs.size > 0) {
+                    Glide.with(it.context).load(photoFolder.imageURIs[0])
+                        //.diskCacheStrategy(DiskCacheStrategy.NONE)
+                        //.skipMemoryCache(true)
+                        .into(it)
                 }
             }
         }

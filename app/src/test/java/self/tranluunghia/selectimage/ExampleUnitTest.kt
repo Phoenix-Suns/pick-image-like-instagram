@@ -1,4 +1,4 @@
-package self.tranluunghia.instagramselectimage
+package self.tranluunghia.selectimage
 
 import org.junit.Test
 

@@ -1,20 +1,24 @@
-package self.tranluunghia.instagramselectimage.adapter
+package self.tranluunghia.selectimage.adapter
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.item_instagram_photo.view.*
-import self.tranluunghia.instagramselectimage.R
-import self.tranluunghia.instagramselectimage.extensions.loadFile
+import self.tranluunghia.selectimage.R
+import self.tranluunghia.selectimage.extensions.decodeBitmapFromFile
 import java.util.*
 
 
 class PhotoAdapter(@LayoutRes val itemLayoutId: Int = R.layout.item_instagram_photo)
     : RecyclerView.Adapter<PhotoAdapter.RecyclerViewHolder>() {
 
-    var items: List<String> = ArrayList()
+    var items = ArrayList<Uri>()
     var listener: Listener? = null
     var selectedPosition: Int? = null   // Single selected
     var selectedPositions: ArrayList<Int> = ArrayList() // multiple selected
@@ -28,7 +32,7 @@ class PhotoAdapter(@LayoutRes val itemLayoutId: Int = R.layout.item_instagram_ph
     }
 
     override fun onBindViewHolder(recyclerViewHolder: RecyclerViewHolder, position: Int) {
-        val link: String = items[position]
+        val link: Uri = items[position]
         recyclerViewHolder.bind(link, position)
     }
 
@@ -41,8 +45,9 @@ class PhotoAdapter(@LayoutRes val itemLayoutId: Int = R.layout.item_instagram_ph
         return position.toLong()
     }
 
-    fun setItems(items: ArrayList<String>) {
-        this.items = items
+    fun setData(items: ArrayList<Uri>) {
+        this.items.clear()
+        this.items.addAll(items)
         selectedPositions.clear()
         selectedPosition = null
         notifyDataSetChanged()
@@ -69,44 +74,63 @@ class PhotoAdapter(@LayoutRes val itemLayoutId: Int = R.layout.item_instagram_ph
         notifyDataSetChanged()
     }
 
-    inner class RecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class RecyclerViewHolder(itemView: View) :
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         var itemPosition: Int = 0
 
-        fun bind(item: String, position: Int) {
+        fun bind(item: Uri, position: Int) {
             this.itemPosition = position
 
             itemView.imageView?.post {
                 itemView.imageView?.let { imageView ->
-                    imageView.loadFile(item)
+                    /*Glide.with(imageView.context).load("file://" + item)
+                        .apply(
+                            RequestOptions()
+                            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                            .override(imageView.measuredWidth, imageView.measuredHeight)
+                            .fitCenter()
+                        )
+                        .into(imageView)*/
+                    Glide.with(imageView.context).load(item)
+                        .apply(
+                            RequestOptions()
+                                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                                .override(imageView.measuredWidth, imageView.measuredHeight)
+                                .fitCenter()
+                        )
+                        .into(imageView)
                 }
             }
 
             // Single selected
             if (itemPosition == selectedPosition) {
                 itemView.imageView?.alpha = 0.3f
+                itemView.layoutSingleSelected.visibility = View.VISIBLE
             } else {
                 itemView.imageView?.alpha = 1f
+                itemView.layoutSingleSelected.visibility = View.GONE
             }
 
             // Multiple selected
             if (isSelectMultiple) {
-                itemView.layoutSelected?.visibility = View.VISIBLE
+                itemView.layoutMultipleSelected?.visibility = View.VISIBLE
 
-                val isSelected = selectedPositions.firstOrNull { index -> index == position } != null
+                val isSelected =
+                    selectedPositions.firstOrNull { index -> index == position } != null
 
                 if (isSelected) {
-                    itemView.layoutSelected?.isSelected = true
+                    itemView.layoutMultipleSelected?.isSelected = true
 
                     itemView.textViewNumber?.visibility = View.VISIBLE
                     //val selectedIndex = selectedPositions.size + 1
                     //textViewNumber.text = "" + selectedIndex
                 } else {
-                    itemView.layoutSelected?.isSelected = false
+                    itemView.layoutMultipleSelected?.isSelected = false
                     itemView.textViewNumber?.visibility = View.INVISIBLE
                     //textViewNumber.text = ""
                 }
             } else {
-                itemView.layoutSelected?.visibility = View.GONE
+                itemView.layoutMultipleSelected?.visibility = View.GONE
             }
         }
 
@@ -114,7 +138,8 @@ class PhotoAdapter(@LayoutRes val itemLayoutId: Int = R.layout.item_instagram_ph
             itemView.setOnClickListener { view ->
                 val oldSelectedPosition = selectedPosition
                 val isMaxSelect = isMaxSelect()
-                val isSelected = selectedPositions.firstOrNull { index -> index == itemPosition } != null
+                val isSelected =
+                    selectedPositions.firstOrNull { index -> index == itemPosition } != null
 
                 if (itemPosition != selectedPosition) {
                     if (!(isSelectMultiple && isMaxSelect) || isSelected) {
@@ -129,14 +154,19 @@ class PhotoAdapter(@LayoutRes val itemLayoutId: Int = R.layout.item_instagram_ph
                     if (!isSelected) {
                         if (!isMaxSelect) {
                             // switch to selected
-                            itemView.layoutSelected?.isSelected = true
+                            itemView.layoutMultipleSelected?.isSelected = true
                             selectedPositions.add(itemPosition)
-                            listener?.onItemChecked(itemView, true, itemPosition, items[itemPosition])
+                            listener?.onItemChecked(
+                                itemView,
+                                true,
+                                itemPosition,
+                                items[itemPosition]
+                            )
                         }
                     } else if (itemPosition == oldSelectedPosition) {
 
                         // click item again: switch to unselected
-                        itemView.layoutSelected?.isSelected = false
+                        itemView.layoutMultipleSelected?.isSelected = false
                         selectedPositions.removeAll { item -> itemPosition == item }
                         listener?.onItemChecked(itemView, false, itemPosition, items[itemPosition])
                     }
@@ -158,7 +188,7 @@ class PhotoAdapter(@LayoutRes val itemLayoutId: Int = R.layout.item_instagram_ph
     }
 
     interface Listener {
-        fun onItemClick(view: View, position: Int, item: String)
-        fun onItemChecked(view: View, isChecked: Boolean, position: Int, item: String)
+        fun onItemClick(view: View, position: Int, item: Uri)
+        fun onItemChecked(view: View, isChecked: Boolean, position: Int, item: Uri)
     }
 }
