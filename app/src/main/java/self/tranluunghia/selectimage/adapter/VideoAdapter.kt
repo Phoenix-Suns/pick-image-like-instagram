@@ -1,26 +1,23 @@
 package self.tranluunghia.selectimage.adapter
 
-import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DecodeFormat
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
-import kotlinx.android.synthetic.main.item_photo.view.*
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import kotlinx.android.synthetic.main.item_video.view.*
 import self.tranluunghia.selectimage.R
-import self.tranluunghia.selectimage.extensions.decodeBitmapFromUri
-import java.util.*
+import self.tranluunghia.selectimage.model.MediaVideo
+import self.tranluunghia.selectimage.utils.TimeUtils
 
 
-class PhotoAdapter(@LayoutRes val itemLayoutId: Int = R.layout.item_photo)
-    : RecyclerView.Adapter<PhotoAdapter.RecyclerViewHolder>() {
+class VideoAdapter(@LayoutRes val itemLayoutId: Int = R.layout.item_video) :
+    RecyclerView.Adapter<VideoAdapter.RecyclerViewHolder>() {
 
-    var items = ArrayList<Uri>()
+    var items = ArrayList<MediaVideo>()
     var listener: Listener? = null
     var selectedPosition: Int? = null   // Single selected
     var selectedPositions: ArrayList<Int> = ArrayList() // multiple selected
@@ -34,8 +31,8 @@ class PhotoAdapter(@LayoutRes val itemLayoutId: Int = R.layout.item_photo)
     }
 
     override fun onBindViewHolder(recyclerViewHolder: RecyclerViewHolder, position: Int) {
-        val link: Uri = items[position]
-        recyclerViewHolder.bind(link, position)
+        val mediaVideo: MediaVideo = items[position]
+        recyclerViewHolder.bind(mediaVideo, position)
     }
 
     override fun getItemCount(): Int {
@@ -47,7 +44,7 @@ class PhotoAdapter(@LayoutRes val itemLayoutId: Int = R.layout.item_photo)
         return position.toLong()
     }
 
-    fun setData(items: ArrayList<Uri>) {
+    fun updateItems(items: ArrayList<MediaVideo>) {
         this.items.clear()
         this.items.addAll(items)
         selectedPositions.clear()
@@ -77,47 +74,28 @@ class PhotoAdapter(@LayoutRes val itemLayoutId: Int = R.layout.item_photo)
     }
 
     inner class RecyclerViewHolder(itemView: View) :
-        androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+        RecyclerView.ViewHolder(itemView) {
         var itemPosition: Int = 0
 
-        fun bind(item: Uri, position: Int) {
+        fun bind(item: MediaVideo, position: Int) {
             this.itemPosition = position
 
-            itemView.imageView?.let { imageView ->
-                imageView.post {
-                    /*Glide.with(imageView.context).load(item)
+            //TimeUtils.toMinuteSecond()
+            itemView.tvDuration.text = TimeUtils.toMinuteSecond(item.duration.toLong())
+
+            itemView.imageView?.post {
+                itemView.imageView?.let { imageView ->
+                    /*val thumbnailBitmap = item.uri.toBitmapThumbnail(imageView.context, null, null, null)
+                    imageView.setImageBitmap(thumbnailBitmap)*/
+
+                    Glide.with(imageView.context).load(item.uri)
                         .apply(
                             RequestOptions()
-                            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                            .override(imageView.measuredWidth, imageView.measuredHeight)
-                            .fitCenter()
+                                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                                .override(imageView.measuredWidth, imageView.measuredHeight)
+                                .fitCenter()
                         )
-                        .into(imageView)*/
-
-                    Glide.with(imageView)
-                        .load(item)
-                        .format(DecodeFormat.PREFER_RGB_565)
-                        .placeholder(R.drawable.ic_placeholder)
-                        .error(R.drawable.ic_error)
-                        .into(object : CustomTarget<Drawable>(imageView.measuredWidth, 1) {
-
-                            override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                                if (position == itemPosition)
-                                    imageView.setImageDrawable(resource)
-                            }
-
-                            // imageView width is 1080, height is set to wrap_content
-                            override fun onLoadCleared(placeholder: Drawable?) {
-                                // clear resources
-                                if (position == itemPosition)
-                                    imageView.setImageDrawable(placeholder)
-                            }
-
-                            override fun onLoadFailed(errorDrawable: Drawable?) {
-                                if (position == itemPosition)
-                                    imageView.setImageDrawable(errorDrawable)
-                            }
-                        })
+                        .into(imageView)
                 }
             }
 
@@ -141,12 +119,9 @@ class PhotoAdapter(@LayoutRes val itemLayoutId: Int = R.layout.item_photo)
                     itemView.layoutMultipleSelected?.isSelected = true
 
                     itemView.textViewNumber?.visibility = View.VISIBLE
-                    //val selectedIndex = selectedPositions.size + 1
-                    //textViewNumber.text = "" + selectedIndex
                 } else {
                     itemView.layoutMultipleSelected?.isSelected = false
                     itemView.textViewNumber?.visibility = View.INVISIBLE
-                    //textViewNumber.text = ""
                 }
             } else {
                 itemView.layoutMultipleSelected?.visibility = View.GONE
@@ -207,7 +182,7 @@ class PhotoAdapter(@LayoutRes val itemLayoutId: Int = R.layout.item_photo)
     }
 
     interface Listener {
-        fun onItemClick(view: View, position: Int, item: Uri)
-        fun onItemChecked(view: View, isChecked: Boolean, position: Int, item: Uri)
+        fun onItemClick(view: View, position: Int, item: MediaVideo)
+        fun onItemChecked(view: View, isChecked: Boolean, position: Int, item: MediaVideo)
     }
 }

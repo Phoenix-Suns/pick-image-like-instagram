@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import self.tranluunghia.selectimage.R
 import self.tranluunghia.selectimage.presentation.selectPhoto.UsingSelectPhotoActivity
+import self.tranluunghia.selectimage.presentation.selectVideo.UsingSelectVideoActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -16,6 +17,10 @@ class MainActivity : AppCompatActivity() {
 
         buttonSelectImage.setOnClickListener {
             startActivity(Intent(this, UsingSelectPhotoActivity::class.java))
+        }
+
+        buttonSelectVideo.setOnClickListener {
+            startActivity(Intent(this, UsingSelectVideoActivity::class.java))
         }
     }
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.selectPhoto.UsingSelectPhotoActivity">
+    tools:context=".presentation.selectVideo.UsingSelectVideoActivity">
 
     <ImageButton
         android:id="@+id/buttonBack"
@@ -35,7 +35,7 @@
     </ScrollView>
 
     <FrameLayout
-        android:id="@+id/layoutSelectImageContainer"
+        android:id="@+id/layoutSelectVideoContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="@+id/scrollView2"

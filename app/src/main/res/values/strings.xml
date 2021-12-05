@@ -4,9 +4,12 @@
     <string name="photo">Photo</string>
     <string name="picture_empty">Picture empty</string>
     <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
     <string name="albums">Albums</string>
     <string name="next">Next</string>
     <string name="photo_selection_limit_reached">Limit selection</string>
     <string name="let_select_picture">Let\'s Select Picture</string>
     <string name="gallery">Gallery</string>
+    <string name="record_video">Record Video</string>
+    <string name="please_select_video_under_seconds">Please select video under %s minutes</string>
 </resources>

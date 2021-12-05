@@ -13,6 +13,7 @@ import android.util.Size
 import self.tranluunghia.selectimage.model.MediaVideo
 import self.tranluunghia.selectimage.model.PhotoFolder
 import self.tranluunghia.selectimage.model.VideoFolder
+import java.lang.Exception
 
 object MediaUtils {
 
@@ -189,16 +190,24 @@ object MediaUtils {
         return null
     }
 
-    fun Uri.toBitmapThumbnail(context: Context, with: Int?, height: Int?, cancelSignal: CancellationSignal?): Bitmap {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            context.contentResolver.loadThumbnail(
-                this,
-                Size(with ?: 480, height ?: 680),
-                cancelSignal)
-        } else {
-            MediaStore.Images.Thumbnails.getThumbnail(context.contentResolver,
-                ContentUris.parseId(this), MediaStore.Images.Thumbnails.MINI_KIND, null)
+    fun Uri.toBitmapThumbnail(context: Context, with: Int?, height: Int?, cancelSignal: CancellationSignal?): Bitmap? {
+        try {
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                context.contentResolver.loadThumbnail(
+                    this,
+                    Size(with ?: 480, height ?: 680),
+                    cancelSignal
+                )
+            } else {
+                MediaStore.Images.Thumbnails.getThumbnail(
+                    context.contentResolver,
+                    ContentUris.parseId(this), MediaStore.Images.Thumbnails.MINI_KIND, null
+                )
+            }
+        } catch (ex: Exception) {
+            ex.printStackTrace()
         }
+        return null
     }
 
     fun getRealPathFromURI(context: Context, contentUri: Uri?): String? {

@@ -4,19 +4,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
-import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_photo_folder.view.*
 import self.tranluunghia.selectimage.R
 import self.tranluunghia.selectimage.extensions.loadUri
-import self.tranluunghia.selectimage.model.PhotoFolder
+import self.tranluunghia.selectimage.model.VideoFolder
 import java.util.*
 
 
-class PhotoFolderAdapter(
-    @LayoutRes val itemLayoutId: Int = R.layout.item_photo_folder
-) : RecyclerView.Adapter<PhotoFolderAdapter.RecyclerViewHolder>() {
+class VideoFolderAdapter(@LayoutRes val itemLayoutId: Int = R.layout.item_photo_folder) :
+    androidx.recyclerview.widget.RecyclerView.Adapter<VideoFolderAdapter.RecyclerViewHolder>() {
 
-    var items: ArrayList<PhotoFolder> = ArrayList()
+    var items: List<VideoFolder> = ArrayList()
     var listener: Listener? = null
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, position: Int): RecyclerViewHolder {
@@ -26,7 +25,7 @@ class PhotoFolderAdapter(
     }
 
     override fun onBindViewHolder(recyclerViewHolder: RecyclerViewHolder, position: Int) {
-        val photoFolder: PhotoFolder = items[position]
+        val photoFolder: VideoFolder = items[position]
         recyclerViewHolder.bind(photoFolder, position)
     }
 
@@ -34,24 +33,23 @@ class PhotoFolderAdapter(
         return items.size
     }
 
-    fun updateItems(photoFolders: ArrayList<PhotoFolder>) {
-        this.items.clear()
-        this.items.addAll(photoFolders)
+    fun updateItems(photoFolders: ArrayList<VideoFolder>) {
+        this.items = photoFolders
         notifyDataSetChanged()
     }
 
     inner class RecyclerViewHolder(itemView: View) :
-        RecyclerView.ViewHolder(itemView) {
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         var itemPosition: Int = 0
 
-        fun bind(photoFolder: PhotoFolder, position: Int) {
+        fun bind(photoFolder: VideoFolder, position: Int) {
             this.itemPosition = position
 
             itemView.buttonFolder?.text = photoFolder.folderName
-            itemView.textViewSize?.text = photoFolder.imageURIs.size.toString() + ""
+            itemView.textViewSize?.text = photoFolder.videos.size.toString() + ""
             itemView.imageViewIcon?.let {
-                if (photoFolder.imageURIs.size > 0) {
-                    it.loadUri(photoFolder.imageURIs[0])
+                if (photoFolder.videos.size > 0) {
+                    it.loadUri(photoFolder.videos[0].uri)
                 }
             }
         }

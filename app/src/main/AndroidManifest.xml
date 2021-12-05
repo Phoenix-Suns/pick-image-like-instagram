@@ -14,10 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="self.tranluunghia.selectimage.presentation.selectPhoto.UsingSelectPhotoActivity"
+            android:name=".presentation.selectPhoto.UsingSelectPhotoActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".presentation.selectVideo.UsingSelectVideoActivity"
+            android:exported="false" />
+
         <!-- Fix android 10 select file: requestLegacyExternalStorage -->
-        <activity android:name="self.tranluunghia.selectimage.presentation.MainActivity">
+        <activity android:name=".presentation.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

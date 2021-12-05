@@ -18,65 +18,82 @@
             android:background="#fff"
             app:layout_collapseMode="parallax">
 
-            <include layout="@layout/toolbar_select_image" />
+            <include layout="@layout/toolbar_select_video" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layoutContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
+        <!--<com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/playerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,1:1"
+            android:background="@color/bg_video_review"
+            app:layout_constraintTop_toTopOf="parent" />-->
+
         <ImageView
-            android:id="@+id/imageViewReview"
+            android:id="@+id/playerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="H,16:9"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/layoutEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:text="@string/picture_empty"
+            app:layout_constraintBottom_toBottomOf="@+id/playerView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/layoutAction"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:id="@+id/buttonRecordVideo"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/record_video"
+                android:textColor="@color/text_gray"
+                android:textSize="@dimen/text_16sp" />
+
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewPhoto"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:numColumns="2"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/imageViewReview"
+            app:layout_constraintBottom_toTopOf="@id/layoutAction"
+            app:layout_constraintTop_toBottomOf="@id/playerView"
             tools:layoutManager="GridLayoutManager"
-            tools:listitem="@layout/item_photo"
+            tools:listitem="@layout/item_video"
             tools:spanCount="5" />
 
         <ImageView
             android:id="@+id/buttonSelectMultiple"
             android:layout_width="@dimen/space_40dp"
             android:layout_height="@dimen/space_40dp"
-            android:layout_margin="@dimen/space_16dp"
+            android:layout_marginEnd="@dimen/space_16dp"
+            android:layout_marginBottom="48dp"
             android:src="@drawable/selector_multiple_selection"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewReview"
-            app:layout_constraintEnd_toEndOf="@id/imageViewReview" />
-
-        <ImageView
-            android:id="@+id/buttonCapture"
-            android:layout_width="@dimen/space_40dp"
-            android:layout_height="@dimen/space_40dp"
-            android:layout_margin="@dimen/space_16dp"
-            android:src="@drawable/ic_camera"
-            android:background="@color/white"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewReview"
-            app:layout_constraintEnd_toStartOf="@id/buttonSelectMultiple" />
-
-        <TextView
-            android:id="@+id/layoutEmpty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/picture_empty"
-            android:textSize="24sp"
-            android:layout_margin="@dimen/space_16dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="@id/playerView"
+            app:layout_constraintEnd_toEndOf="@id/playerView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -4,15 +4,27 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../../../layout/custom_preview.xml" value="0.39114583333333336" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/green_blue.xml" value="0.26614583333333336" />
+        <entry key="app/src/main/res/drawable/ic_instagram_multipleselect_normal.xml" value="0.3921875" />
+        <entry key="app/src/main/res/drawable/ic_instagram_scale_normal.xml" value="0.3921875" />
+        <entry key="app/src/main/res/drawable/ic_placeholder.xml" value="0.3921875" />
+        <entry key="app/src/main/res/drawable/selector_instagram_multiple_selection.xml" value="0.3921875" />
+        <entry key="app/src/main/res/drawable/selector_intagram_circle.xml" value="0.3921875" />
         <entry key="app/src/main/res/layout/activity_empty.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/activity_select_photo.xml" value="0.1824074074074074" />
         <entry key="app/src/main/res/layout/activity_using_select_photo.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_using_select_video.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/fragment_instagram_select_photo.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_select_photo.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_select_video.xml" value="0.37623762376237624" />
         <entry key="app/src/main/res/layout/item_instagram_photo.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/item_instagram_video.xml" value="0.37604166666666666" />
+        <entry key="app/src/main/res/layout/item_photo.xml" value="0.21197916666666666" />
+        <entry key="app/src/main/res/layout/item_video_folder.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/toolbar_instagram_select_image.xml" value="0.37604166666666666" />
+        <entry key="app/src/main/res/layout/toolbar_select_video.xml" value="0.37604166666666666" />
       </map>
     </option>
   </component>

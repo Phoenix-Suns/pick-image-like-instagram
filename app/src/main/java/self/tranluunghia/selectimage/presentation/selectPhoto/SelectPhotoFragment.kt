@@ -25,9 +25,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.fragment_select_photo.*
-import kotlinx.android.synthetic.main.toolbar_instagram_select_folder.*
-import kotlinx.android.synthetic.main.toolbar_instagram_select_image.*
-import kotlinx.android.synthetic.main.toolbar_instagram_select_image.buttonFolder
+import kotlinx.android.synthetic.main.toolbar_select_folder.*
+import kotlinx.android.synthetic.main.toolbar_select_image.*
+import kotlinx.android.synthetic.main.toolbar_select_image.buttonFolder
 import self.tranluunghia.selectimage.R
 import self.tranluunghia.selectimage.adapter.PhotoAdapter
 import self.tranluunghia.selectimage.adapter.PhotoFolderAdapter
